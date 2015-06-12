@@ -13,28 +13,6 @@ activity <- read.csv("activity.csv", header = TRUE)
 ```
 
 ## What is mean total number of steps taken per day?
-<!-- 
-# Using all values for steps per day including NAs
-stepsperday <- sapply(split(activity$steps, activity$date), sum)
-# Histogram will show NAs as zero which is not necessarily what we want
-hist(stepsperday)
-# mean() and median() uses unmodified length but ignores na's
-mean(stepsperday, na.rm = TRUE)
-median(stepsperday, na.rm = TRUE)
--->
-
-<!--
-# Removing all lines where values are missing
-# Note that this removes the NAs completely, reducing length() used in mean() and median()
-complete_activity <- activity[!is.na(activity$steps),]
-# Creating a labeled integer vector of total steps per day 
-stepsperday <- sapply(split(complete_activity$steps, complete_activity$date), sum)
-# Histogram completely ignores NA's as they are not present in this data set
-hist(stepsperday)
-# mean() and median() uses the length of modified data set without NAs, which might not be want we wanted
-mean(stepsperday)
-median(stepsperday)
--->
 
 ```{r}
 # Creating a named integer vector of total steps per day 
@@ -44,7 +22,9 @@ Our named integer vector will contain NA values just like the original data set.
 ```{r}
 hist(stepsperday)
 ```
+
 The mean and median function can not handle na-values so these are removed. Removing them using the na.rm flag will read then as 0 but use the same length as the original list. Creating a subset of complete values would give different mean and median values. 
+
 ```{r}
 mean(stepsperday, na.rm = TRUE)
 median(stepsperday, na.rm = TRUE)
@@ -58,7 +38,9 @@ meanstepsperinterval <- sapply(split(activity$steps, activity$interval), mean, n
 # Plot average for each day
 plot(meanstepsperinterval, type = "l")
 ```
+
 Since the integer ector is named with interval we can et the interval name with names().
+
 ```{r}
 # Interval with highest average number of steps
 names(meanstepsperinterval)[meanstepsperinterval == max(meanstepsperinterval)]
@@ -86,9 +68,11 @@ hist(filledstepsperday)
 mean(filledstepsperday, na.rm = TRUE)
 median(filledstepsperday, na.rm = TRUE)
 ```
+
 Since I filled NA values with the interval average we clearly see that the center of our histogram is stretched taller with a higher frequence of average values. Our mean and median converge to the same value.
 
 ## Are there differences in activity patterns between weekdays and weekends?
+
 We can replace our old date with a Date object.
 
 ```{r}
@@ -99,6 +83,7 @@ filledactivity$date <- as.POSIXlt(filledactivity$date, format = "%Y-%m-%d")
 # As I am using a Swedish version of OSX I need to set my locale to english in order to use 'Saturday' and 'Sunday' as my weekday-tests.
 Sys.setlocale(locale = "en_US.UTF-8")
 ```
+
 ```{r}
 filledactivity$weekday <- factor(ifelse(weekdays(filledactivity$date) %in% c("Saturday", "Sunday"), "weekend", "weekday"))
 weekdayactivity <- filledactivity[filledactivity$weekday == "weekday",]
@@ -111,7 +96,4 @@ plot(meanweekend, type = "l", ylim = c(0, 250), xlim = c(0, 300), ylab = "", xla
 par(mfrow = c(1,1), mar = c(2,2,2,2))
 mtext(text = "Number of steps", side = 2)
 ```
-```{r}
-```
-```{r}
-```
+
